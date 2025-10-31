@@ -6,7 +6,7 @@
 This project simulates a simple **Interrupt Controller** in Java.  
 It demonstrates how hardware interrupts (like from a keyboard, mouse, or printer) are handled using multithreading, priorities, and interrupt masking.
 
-Each device runs on a separate thread and raises interrupts at random intervals.  
+Each device  runs on a separate thread and raises interrupts at random intervals.  
 The controller manages these interrupts based on **priority** and **mask status** (enabled/disabled).
 
 ---
