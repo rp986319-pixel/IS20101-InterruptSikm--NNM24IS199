@@ -1,119 +1,99 @@
 # IS20101-InterruptSikm--NNM24IS199
 ```markdown
-# Interrupt Controller Simulation (Java)
+# 🖥️ Interrupt Handler Simulation (C using pthreads)
 
-## 🧠 Overview
-This project simulates a simple **Interrupt Controller** in Java.  
-It demonstrates how hardware interrupts (like from a keyboard, mouse, or printer) are handled using multithreading, priorities, and interrupt masking.
+## 📘 Overview
+This project simulates a **simple interrupt handling system** in C using **POSIX threads (pthreads)**.  
+It demonstrates how an interrupt controller handles interrupts from different devices — **Keyboard**, **Mouse**, and **Printer** — while implementing **masking** and **synchronization** using mutex locks.
 
-Each device  runs on a separate thread and raises interrupts at random intervals.  
-The controller manages these interrupts based on **priority** and **mask status** (enabled/disabled).
+Each interrupt source is represented as a separate thread that simulates an **Interrupt Service Routine (ISR)**.
 
 ---
 
 ## ⚙️ Features
-- Simulates multiple hardware devices:
-  - Keyboard
-  - Mouse
-  - Printer
-- Devices can be **masked** (disabled) or **enabled**.
-- Interrupts are handled in **priority order**:
-  1. Keyboard (highest)
-  2. Mouse
-  3. Printer (lowest)
-- Real-time interrupt logs with timestamps.
-- Thread-safe operations using synchronization and wait/notify.
+- 🧵 Multi-threaded simulation using **pthreads**
+- 🚫 Demonstrates **masking** (disabling certain interrupts)
+- 🔐 Uses **mutex locks** for synchronized access
+- 🖨️ Simulates real-world **interrupt handling**
+- 📊 Logs all interrupts (processed or ignored)
 
 ---
 
-## 🧩 Classes Overview
+## 🧩 Interrupt Priority
 
-| Class | Description |
-|--------|--------------|
-| `Device` | Enum representing different devices with names and priorities. |
-| `InterruptEvent` | Represents an interrupt raised by a device. |
-| `InterruptController` | Core class that manages interrupt masking, queuing, and handling. |
-| `DeviceThread` | Simulates each device generating interrupts at random intervals. |
-| `InterruptControllerShort` | Main class to start the simulation. |
+Keyboard > Mouse > Printer
+
+Although interrupts are generated randomly, this order represents their **intended priority** in real systems.
 
 ---
 
-## ▶️ How It Works
-1. Each device runs on a separate thread.
-2. Devices randomly raise interrupts.
-3. The controller:
-   - Ignores masked devices.
-   - Adds unmasked device interrupts to a priority queue.
-4. The handler thread continuously processes interrupts in order of priority.
-5. Processed interrupts are logged with timestamps.
+## 🚫 Masking Configuration
+Interrupt masks determine which devices are active (0) or ignored (1):
+
+```c
+int mask_keyboard = 0;  // 0 = active
+int mask_mouse = 1;     // 1 = masked (ignored)
+int mask_printer = 0;   // 0 = active
+
+Compilation & Execution
+
+1️⃣ Save the file as:
+
+interrupt_handler.c
+
+2️⃣ Compile using GCC:
+
+gcc interrupt_handler.c -o interrupt_handler -lpthread
+
+3️⃣ Run the program:
+
+./interrupt_handler
+
 
 ---
 
-## 🧪 Example Output
+🧾 Sample Output
 
-```
+=== INTERRUPT HANDLER SIMULATION ===
+Priority: Keyboard > Mouse > Printer
 
-Keyboard enabled
-Mouse enabled
-Printer masked
-Keyboard → ISR done
-Mouse → ISR done
-Keyboard → ISR done
-...
+Keyboard Interrupt Received -> Processing ISR -> Done
+Interrupt Ignored (Masked Device)
+Printer Interrupt Received -> Processing ISR -> Done
+Keyboard Interrupt Received -> Processing ISR -> Done
+Interrupt Ignored (Masked Device)
+Printer Interrupt Received -> Processing ISR -> Done
 
-=== ISR Log ===
-12:34:56 - Keyboard
-12:34:57 - Mouse
-12:34:59 - Keyboard
+All interrupts handled successfully. Execution complete.
 
-Simulation complete.
-
-````
 
 ---
 
-## 💻 How to Run
+🧠 Key Concepts Demonstrated
 
-### **1️⃣ Compile**
-Open your terminal in the project directory and run:
-```bash
-javac InterruptControllerShort.java
-````
+Multithreading: pthread_create() and pthread_join()
 
-### **2️⃣ Run**
+Synchronization: pthread_mutex_lock() and pthread_mutex_unlock()
 
-Then execute the compiled class:
+Randomized Interrupt Simulation: rand() for generating random events
 
-```bash
-java InterruptControllerShort
-```
+ISR Simulation: Each thread acts as a device’s Interrupt Service Routine
+
+
 
 ---
 
-## ⏱️ Simulation Time
+🏁 Conclusion
 
-* Runs for 8 seconds by default.
-* You can change the runtime by modifying this line in `main()`:
+This program is a simple but effective simulation of an interrupt handling mechanism.
+It helps you understand:
 
-  ```java
-  Thread.sleep(8000);
-  ```
+How masking prevents certain interrupts
 
----
+How mutex locks prevent race conditions
 
-## 📜 Notes
+How threads simulate simultaneous hardware activity
 
-* Interrupts from masked devices are ignored and printed as `masked`.
-* You can change the initial mask settings in:
-
-  ```java
-  ic.maskDevice(Device.KEYBOARD, true);
-  ic.maskDevice(Device.MOUSE, true);
-  ic.maskDevice(Device.PRINTER, false);
-  ```
-* Try experimenting by enabling/disabling devices or adding new ones!
-
----
 
 ## 👨‍💻 Author
 
